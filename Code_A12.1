@@ -1,0 +1,40 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+
+#Reading the dataset
+dataset = pd.read_csv("iris.csv", header = None, \
+             names = ['sepal length', 'sepal width', 'petal length', 'petal width','class'])
+
+# X is the columns excluding class, also exclude first row as it is the column name
+X = dataset.iloc[1:,:-1].values
+# y is the class column
+y = dataset.iloc[1:,4].values
+ 
+#label encoding the Target values
+from sklearn.preprocessing import LabelEncoder
+labelencoder = LabelEncoder()
+y = labelencoder.fit_transform(y)
+
+
+#feature scaling
+from sklearn.preprocessing import StandardScaler
+sc = StandardScaler()
+X = sc.fit_transform(X)
+
+#Reducing the dimensions for 3D
+#Converting 4 dimnesional irisdata into 3 dimensional using PCA
+from sklearn.decomposition import PCA
+pca = PCA(n_components=3)
+X = pca.fit_transform(X)
+
+
+#Visualising the 3D chart
+from mpl_toolkits.mplot3d import Axes3D
+
+fig = plt.figure(1, figsize=(8, 6))
+ax = Axes3D(fig)
+
+# Reorder the labels to have colors matching the cluster results
+ax.scatter(X[:, 0], X[:, 1], X[:, 2], c=y , edgecolor='k')
+
+plt.show()
